@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PACS ROH किसान सेवा केंद्र</title>
+
+  <style>
+    :root{
+      --bg:#0b1220;--card:#121a2c;--muted:#9fb0d0;--text:#eaf1ff;
+      --accent:#4f8cff;--accent2:#00d4ff;
+      --danger:#ff6b6b;--ok:#19d37e;--warn:#ffd68a;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial, Helvetica, sans-serif}
+    body{background:var(--bg);color:var(--text)}
+    html{scroll-behavior:smooth}
+
+    header{
+      position:sticky;top:0;z-index:99;
+      display:flex;justify-content:space-between;align-items:center;
+      padding:14px 16px;background:rgba(9,14,26,.90);
+      border-bottom:1px solid rgba(255,255,255,.08)
+    }
+    header b{font-size:18px}
+    header nav a{color:#fff;text-decoration:none;margin:0 8px;opacity:.85;font-size:14px}
+    header nav a:hover{opacity:1;color:var(--accent2)}
+
+    section{padding:30px 16px;max-width:1100px;margin:auto}
+    h2{margin-bottom:12px}
+    .muted{color:var(--muted);margin-bottom:12px}
+    .card{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.08);
+      padding:16px;border-radius:18px;margin-top:12px
+    }
+
+    input,select,textarea{
+      width:100%;padding:12px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.15);
+      background:#0d1628;color:#fff;outline:none
+    }
+    textarea{resize:vertical}
+
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:720px){.grid{grid-template-columns:1fr} header nav{display:none}}
+
+    button{
+      padding:10px 14px;border-radius:12px;border:none;
+      font-weight:900;cursor:pointer
+    }
+    .btn{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#041020}
+    .btn2{background:transparent;border:1px solid rgba(255,255,255,.2);color:#fff}
+
+    .ok{color:var(--ok);font-weight:900}
+    .err{color:var(--danger);font-weight:900}
+    .warn{color:var(--warn);font-weight:900}
+
+    .ticketBox{
+      background:#0d1628;border:1px solid rgba(255,255,255,.10);
+      padding:12px;border-radius:14px;margin-top:12px;line-height:1.7
+    }
+
+    /* Admin tickets */
+    .ticket{
+      background:#0d1628;border:1px solid rgba(255,255,255,.10);
+      padding:12px;border-radius:14px;margin:12px 0;line-height:1.6
+    }
+    .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .noteRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .noteRow input{flex:1;min-width:220px}
+
+    /* ✅ AI widget */
+    #aiBtn{
+      position:fixed;right:18px;bottom:18px;z-index:9999;
+      padding:12px 16px;border-radius:14px;border:none;
+      font-weight:900;cursor:pointer;
+      background:linear-gradient(90deg,var(--accent),var(--accent2));
+      color:#041020;
+    }
+    #aiWidget{
+      position:fixed;right:18px;bottom:70px;z-index:9999;
+      width:360px;max-width:92vw;height:520px;max-height:78vh;
+      background:#0d1628;border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;overflow:hidden;display:none;
+      box-shadow:0 20px 70px rgba(0,0,0,.6);
+    }
+    .aiHead{
+      padding:12px 14px;
+      background:linear-gradient(90deg,rgba(79,140,255,.25),rgba(0,212,255,.15));
+      border-bottom:1px solid rgba(255,255,255,.08);
+      display:flex;justify-content:space-between;align-items:center
+    }
+    .aiHead b{font-size:16px}
+    .closeBtn{cursor:pointer;background:transparent;border:none;color:#fff;font-size:18px;font-weight:900}
+    .aiBody{
+      height:calc(100% - 120px);
+      overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px
+    }
+    .msg{max-width:85%;padding:10px 12px;border-radius:14px;font-size:14px;line-height:1.4}
+    .bot{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.06)}
+    .user{background:rgba(79,140,255,.20);border:1px solid rgba(79,140,255,.30);align-self:flex-end}
+    .aiInput{display:flex;gap:10px;padding:10px;border-top:1px solid rgba(255,255,255,.06)}
+    .aiInput input{flex:1}
+  </style>
+</head>
+
+<body>
+
+<header>
+  <b>PACS ROH किसान सेवा केंद्र</b>
+  <nav>
+    <a href="#services">सेवाएँ</a>
+    <a href="#book">बुकिंग</a>
+    <a href="#track">ट्रैक</a>
+    <a href="#admin">Admin</a>
+    <a href="#contact">संपर्क</a>
+  </nav>
+</header>
+
+<section style="padding:18px 16px 0;max-width:1100px;margin:auto">
+  <div class="card" style="text-align:center;background:linear-gradient(90deg,#064e3b,#166534);border-color:rgba(255,255,255,.15)">
+    <h2 style="margin-bottom:6px">🌾 PACS ROH किसान सेवा केंद्र</h2>
+    <p style="margin:0;color:#fff">किसान की सेवा • गाँव का विकास • सहकारिता से समृद्धि</p>
+    <p style="margin:6px 0 0;color:#d1fae5;font-size:13px">संपर्क: 9508903619 | pacsrohofficial@gmail.com</p>
+  </div>
+</section>
+
+<section id="services">
+  <h2>हमारी प्रमुख सेवाएँ</h2>
+  <div class="card">
+    किसान पंजीकरण • PACS सदस्यता • किसान प्रोफाइल अपडेट • धान/गेहूँ खरीद • PACS ऋण आवेदन • खाद/बीज रिकॉर्ड • ऑनलाइन फॉर्म • दस्तावेज़ स्कैन/प्रिंट • प्रमाण-पत्र आवेदन • बिल/रिचार्ज • टिकट बुकिंग • अन्य अधिकृत PACS सेवाएँ
+  </div>
+</section>
+
+<section id="book">
+  <h2>सेवा बुक करें</h2>
+  <div class="card">
+    <form id="bookingForm">
+      <div class="grid">
+        <div><label>Full Name</label><input id="name" required /></div>
+        <div><label>Phone</label><input id="phone" required /></div>
+      </div>
+
+      <div class="grid" style="margin-top:12px">
+        <div>
+          <label>Service Type</label>
+          <select id="service" required>
+            <option value="">Select Service</option>
+            <option>ऑनलाइन फॉर्म / सरकारी योजना</option>
+            <option>प्रिंटिंग / स्कैन / फोटोकॉपी</option>
+            <option>आधार / PAN आवेदन</option>
+            <option>टिकट बुकिंग</option>
+            <option>बिजली बिल / मोबाइल / DTH</option>
+            <option>फोटो / स्कैन / PDF</option>
+            <option>अन्य PACS / किसान सेवा</option>
+          </select>
+        </div>
+        <div><label>Preferred Date</label><input id="date" type="date" required /></div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Work Details</label>
+        <textarea id="details" rows="4" required></textarea>
+      </div>
+
+      <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" type="submit">Submit Booking</button>
+      </div>
+
+      <div id="bookingResult" style="margin-top:12px"></div>
+    </form>
+  </div>
+</section>
+
+<section id="track">
+  <h2>सेवा टिकट ट्रैक करें</h2>
+  <div class="card">
+    <p class="muted">Ticket status ke liye Ticket ID + Passcode dono required.</p>
+    <div class="grid">
+      <div><label>Ticket ID</label><input id="ticketId" placeholder="PACS ROH 101"/></div>
+      <div><label>Passcode</label><input id="ticketPass" placeholder="6 digit passcode"/></div>
+    </div>
+
+    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn2" id="trackBtn" type="button">Track</button>
+    </div>
+
+    <div id="trackResult" style="margin-top:12px"></div>
+  </div>
+</section>
+
+<section id="admin">
+  <h2>PACS Admin Panel</h2>
+
+  <div class="card">
+    <h3>Admin Login</h3>
+
+    <!-- ✅ Autofill Blocker (IMPORTANT) -->
+    <input type="text" style="display:none">
+    <input type="password" style="display:none">
+
+    <div class="grid" style="margin-top:10px">
+      <div>
+        <label>Mobile</label>
+        <input
+          id="adminMobile"
+          type="text"
+          placeholder="Enter mobile number"
+          inputmode="numeric"
+          autocomplete="off"
+          name="admin_mobile_no_save_987654"
+          value=""
+        />
+      </div>
+
+      <div>
+        <label>Password</label>
+        <input
+          id="adminPassword"
+          type="password"
+          placeholder="Enter password"
+          autocomplete="new-password"
+          name="admin_password_no_save_987654"
+          value=""
+        />
+      </div>
+    </div>
+
+    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" id="adminLoginBtn" type="button">Login</button>
+      <button class="btn2" id="adminLogoutBtn" type="button" style="display:none">Logout</button>
+    </div>
+
+    <div id="adminLoginResult" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card" id="adminPanel" style="display:none">
+    <h3>PACS Online Message</h3>
+
+    <div class="grid">
+      <input id="onlineMessage" placeholder="Main online hoon..." />
+      <button class="btn2" id="saveOnlineMessage" type="button">Update</button>
+    </div>
+
+    <h3 style="margin-top:18px">Tickets List</h3>
+    <div id="ticketList"></div>
+  </div>
+</section>
+
+<section id="contact">
+  <h2>Contact</h2>
+  <div class="card">
+    <p><b>पता:</b> PACS ROH किसान सेवा केंद्र, रोह, जिला - नवादा (बिहार), पिन - 805141</p>
+    <p><b>समय:</b> सुबह 9 बजे - रात 9 बजे</p>
+    <p><b>संपर्क:</b> +91 9508903619</p>
+    <p><b>Email:</b> pacsrohofficial@gmail.com<br/><b>Alternate:</b> pacsrohofficial@hotmail.com</p>
+  </div>
+</section>
+
+<!-- ✅ REAL CHATGPT AI SUPPORT -->
+<button id="aiBtn">PACS AI Support</button>
+
+<div id="aiWidget">
+  <div class="aiHead">
+    <div>
+      <b>PACS ROH AI Assistant</b><br/>
+      <span style="font-size:12px;color:rgba(255,255,255,.75)">किसान एवं PACS ऑनलाइन सहायता</span>
+    </div>
+    <button class="closeBtn" id="aiClose">✕</button>
+  </div>
+
+  <div class="aiBody" id="aiBody">
+    <div class="msg bot">नमस्ते! मैं PACS ROH AI Assistant हूँ। किसान/PACS सेवा में आपको किस जानकारी की जरूरत है?</div>
+  </div>
+
+  <div class="aiInput">
+    <input id="aiText" placeholder="Type your message..."/>
+    <button class="btn" id="aiSend" type="button">Send</button>
+  </div>
+</div>
+
+<script type="module">
+  // Firebase imports
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+  import { getDatabase, ref, set, get, child, update, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
+  import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+
+  // ✅ Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyCkhpRoPhqvjHNyI8aCsQ_OEpBmwCYPIGU",
+    authDomain: "online-server-cafe-roh.firebaseapp.com",
+    databaseURL: "https://online-server-cafe-roh-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "online-server-cafe-roh",
+    storageBucket: "online-server-cafe-roh.firebasestorage.app",
+    messagingSenderId: "818872973008",
+    appId: "1:818872973008:web:f8102d4fb3de82e0fa10d5",
+    measurementId: "G-T2MFC6F34F"
+  };
+
+  // ✅ Admin settings
+  const ADMIN_UID = "ewzVD0nvjjdqVaCv9IZmV2VqeA82";
+  const ADMIN_DOMAIN = "@aadicyber.com";
+
+  // Init
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const storage = getStorage(app);
+  const auth = getAuth(app);
+
+  const escapeHtml = (s="") => s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+  const isAdmin = () => auth.currentUser && auth.currentUser.uid === ADMIN_UID;
+
+  // ✅ Force clear admin inputs (NO PREFILL FIX)
+  function clearAdminFields(){
+    const m = document.getElementById("adminMobile");
+    const p = document.getElementById("adminPassword");
+    if(m) m.value = "";
+    if(p) p.value = "";
+  }
+  window.addEventListener("load", () => {
+    clearAdminFields();
+    setTimeout(clearAdminFields, 200);
+    setTimeout(clearAdminFields, 700);
+    setTimeout(clearAdminFields, 1500);
+  });
+  document.addEventListener("visibilitychange", () => {
+    if(!document.hidden) clearAdminFields();
+  });
+
+  // ---------------- BOOKING ----------------
+  const bookingForm = document.getElementById("bookingForm");
+  const bookingResult = document.getElementById("bookingResult");
+
+  bookingForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    bookingResult.innerHTML = "<div class='warn'>Saving...</div>";
+
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const service = document.getElementById("service").value;
+    const date = document.getElementById("date").value;
+    const details = document.getElementById("details").value.trim();
+    const passcode = Math.floor(100000 + Math.random() * 900000).toString();
+    let photoURL = "";
+
+    try{
+      // Ticket sequence: PACS ROH 101 → PACS ROH 9999
+      const counterRef = ref(db, "ticketCounter");
+      const counterResult = await runTransaction(counterRef, (current) => {
+        const n = Number(current);
+        if (!Number.isFinite(n) || n < 100) return 101;
+        if (n >= 9999) return 9999;
+        return n + 1;
+      });
+
+      if (!counterResult.committed || Number(counterResult.snapshot.val()) >= 10000) {
+        throw new Error("Ticket sequence completed");
+      }
+
+      const ticketNumber = Number(counterResult.snapshot.val());
+      if (ticketNumber < 101 || ticketNumber > 9999) {
+        throw new Error("Invalid ticket number");
+      }
+
+      const ticket = `PACS ROH ${ticketNumber}`;
+
+      await set(ref(db, "tickets/" + ticket), {
+        ticket,
+        passcode,
+        name,
+        phone,
+        service,
+        date,
+        details,
+        photoURL,
+        status: "Pending",
+        adminNote: "",
+        createdAt: new Date().toISOString()
+      });
+
+      bookingResult.innerHTML = `
+        <div class="ok">✅ Booking Confirmed!</div>
+        <div class="ticketBox">
+          <b>Ticket ID:</b> ${ticket}<br/>
+          <b>Passcode:</b> ${passcode}<br/>
+          <span class="warn">⚠️ Ticket ID + Passcode save kar lo</span>
+        </div>
+      `;
+      bookingForm.reset();
+    }catch(err){
+      console.log(err);
+      bookingResult.innerHTML = "<div class='err'>❌ Booking failed (Storage/Rules check)</div>";
+    }
+  });
+
+  // ---------------- TRACK ----------------
+  document.getElementById("trackBtn").addEventListener("click", async () => {
+    const id = document.getElementById("ticketId").value.trim();
+    const pass = document.getElementById("ticketPass").value.trim();
+    const out = document.getElementById("trackResult");
+
+    if(!id || !pass){
+      out.innerHTML = "<div class='warn'>⚠️ Ticket ID + Passcode dono enter karo</div>";
+      return;
+    }
+
+    try{
+      const snap = await get(child(ref(db), "tickets/" + id));
+      if(!snap.exists()){
+        out.innerHTML = "<div class='err'>❌ Ticket not found</div>";
+        return;
+      }
+
+      const data = snap.val();
+      if(pass !== data.passcode){
+        out.innerHTML = "<div class='err'>❌ Wrong Passcode</div>";
+        return;
+      }
+
+      out.innerHTML = `
+        <div class="ok">✅ Ticket Found</div>
+        <div class="ticketBox">
+          <b>Name:</b> ${escapeHtml(data.name)}<br/>
+          <b>Service:</b> ${escapeHtml(data.service)}<br/>
+          <b>Date:</b> ${escapeHtml(data.date)}<br/>
+          <b>Status:</b> ${escapeHtml(data.status)}<br/>
+          <b>Admin Note:</b> ${escapeHtml(data.adminNote || "-")}<br/>
+          ${data.photoURL ? `<b>Photo:</b> <a target="_blank" style="color:#00d4ff" href="${data.photoURL}">View</a>` : ""}
+        </div>
+      `;
+    }catch(err){
+      console.log(err);
+      out.innerHTML = "<div class='err'>❌ Track error</div>";
+    }
+  });
+
+  // ---------------- ADMIN LOGIN ----------------
+  const adminPanel = document.getElementById("adminPanel");
+  const adminLogoutBtn = document.getElementById("adminLogoutBtn");
+  const adminLoginResult = document.getElementById("adminLoginResult");
+  const adminLoginBtn = document.getElementById("adminLoginBtn");
+
+  adminLoginBtn.addEventListener("click", async () => {
+    const mobile = document.getElementById("adminMobile").value.trim();
+    const pass = document.getElementById("adminPassword").value.trim();
+
+    if(!mobile || !pass){
+      adminLoginResult.innerHTML = "<div class='warn'>⚠️ Mobile aur Password dono bharna hai</div>";
+      return;
+    }
+
+    const email = mobile + ADMIN_DOMAIN;
+
+    try{
+      adminLoginResult.innerHTML = "<div class='warn'>Logging in...</div>";
+      await signInWithEmailAndPassword(auth, email, pass);
+    }catch(err){
+      console.log(err);
+      adminLoginResult.innerHTML = "<div class='err'>❌ Admin login failed</div>";
+      clearAdminFields();
+    }
+  });
+
+  adminLogoutBtn.addEventListener("click", async () => {
+    await signOut(auth);
+    clearAdminFields();
+  });
+
+  onAuthStateChanged(auth, (user) => {
+    if(user && user.uid === ADMIN_UID){
+      adminPanel.style.display = "block";
+      adminLogoutBtn.style.display = "inline-block";
+      adminLoginResult.innerHTML = "<div class='ok'>✅ Admin Logged In</div>";
+    }else{
+      adminPanel.style.display = "none";
+      adminLogoutBtn.style.display = "none";
+      if(adminLoginResult) adminLoginResult.innerHTML = "";
+      clearAdminFields();
+    }
+  });
+
+  // ---------------- Admin Online Message ----------------
+  document.getElementById("saveOnlineMessage").addEventListener("click", async () => {
+    if(!isAdmin()) return alert("Admin only");
+    const msg = document.getElementById("onlineMessage").value.trim();
+    await set(ref(db, "admin/onlineMessage"), { message: msg, updatedAt: new Date().toISOString() });
+    alert("✅ Updated");
+  });
+
+  // ---------------- Admin Ticket list ----------------
+  const ticketList = document.getElementById("ticketList");
+
+  function renderTicket(k, d){
+    return `
+      <div class="ticket">
+        <b>${escapeHtml(k)}</b> | <span style="color:#00d4ff">${escapeHtml(d.status||"Pending")}</span><br/>
+        <b>Name:</b> ${escapeHtml(d.name||"")} | <b>Phone:</b> ${escapeHtml(d.phone||"")}<br/>
+        <b>Service:</b> ${escapeHtml(d.service||"")} | <b>Date:</b> ${escapeHtml(d.date||"")}<br/>
+        <b>Passcode:</b> ${escapeHtml(d.passcode||"")}<br/>
+        <b>Note:</b> ${escapeHtml(d.adminNote||"-")}<br/>
+
+        <div class="actions">
+          <button class="btn2" data-s="Accepted" data-t="${k}">Accept</button>
+          <button class="btn2" data-s="Rejected" data-t="${k}">Reject</button>
+          <button class="btn2" data-s="Online" data-t="${k}">Online</button>
+          <button class="btn2" data-s="In Process" data-t="${k}">In Process</button>
+          <button class="btn2" data-s="Done" data-t="${k}">Done</button>
+        </div>
+
+        <div class="noteRow">
+          <input id="note_${k}" placeholder="Customer message..."/>
+          <button class="btn2" data-note="1" data-t="${k}">Save Note</button>
+        </div>
+      </div>
+    `;
+  }
+
+  onValue(ref(db, "tickets"), (snap) => {
+    if(!isAdmin()){
+      ticketList.innerHTML = "<div class='warn'>Admin login required</div>";
+      return;
+    }
+    if(!snap.exists()){
+      ticketList.innerHTML = "<div class='warn'>No tickets</div>";
+      return;
+    }
+    const data = snap.val();
+    const keys = Object.keys(data).sort((a,b)=> (data[b]?.createdAt||"").localeCompare(data[a]?.createdAt||""));
+    ticketList.innerHTML = keys.map(k=>renderTicket(k,data[k])).join("");
+  });
+
+  ticketList.addEventListener("click", async (e) => {
+    if(!isAdmin()) return;
+    const b = e.target.closest("button");
+    if(!b) return;
+
+    const t = b.dataset.t;
+    if(!t) return;
+
+    if(b.dataset.s){
+      await update(ref(db,"tickets/"+t), { status:b.dataset.s, adminActionAt:new Date().toISOString() });
+      return;
+    }
+    if(b.dataset.note==="1"){
+      const note = document.getElementById("note_"+t)?.value.trim() || "";
+      await update(ref(db,"tickets/"+t), { adminNote: note, adminActionAt:new Date().toISOString() });
+      alert("✅ Note saved");
+    }
+  });
+
+  // ---------------- REAL AI SUPPORT (ChatGPT) ----------------
+  const aiBtn = document.getElementById("aiBtn");
+  const aiWidget = document.getElementById("aiWidget");
+  const aiClose = document.getElementById("aiClose");
+  const aiBody = document.getElementById("aiBody");
+  const aiText = document.getElementById("aiText");
+  const aiSend = document.getElementById("aiSend");
+  let history = [];
+
+  aiBtn.onclick = () => aiWidget.style.display = "block";
+  aiClose.onclick = () => aiWidget.style.display = "none";
+
+  function addMsg(text, who){
+    const div = document.createElement("div");
+    div.className = "msg " + who;
+    div.innerText = text;
+    aiBody.appendChild(div);
+    aiBody.scrollTop = aiBody.scrollHeight;
+  }
+
+  async function sendAI(text){
+    addMsg(text, "user");
+
+    const typing = document.createElement("div");
+    typing.className = "msg bot";
+    typing.innerText = "Typing...";
+    aiBody.appendChild(typing);
+    aiBody.scrollTop = aiBody.scrollHeight;
+
+    try{
+      const res = await fetch("http://localhost:3000/chat", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ message:text, history })
+      });
+      const data = await res.json();
+      typing.remove();
+
+      addMsg(data.reply || "No response", "bot");
+
+      history.push({ role:"user", content:text });
+      history.push({ role:"assistant", content:data.reply || "" });
+
+    }catch(err){
+      typing.remove();
+      addMsg("❌ AI server connect nahi ho raha. `npm start` run karo.", "bot");
+      console.log(err);
+    }
+  }
+
+  aiSend.onclick = () => {
+    const text = aiText.value.trim();
+    if(!text) return;
+    aiText.value = "";
+    sendAI(text);
+  };
+  aiText.addEventListener("keydown", (e)=>{ if(e.key==="Enter") aiSend.click(); });
+</script>
+
+</body>
+</html>
